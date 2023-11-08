@@ -9,9 +9,10 @@ terraform {
   }
 }
 
-module "cloudwatch" {
-  source ="git@github.com:satishkumarkrishnan/Terraform-KMS.git?ref=main"  
+module "ebs" {
+  source="git@github.com:satishkumarkrishnan/terraform-aws-asg.git?ref=main"  
 }
+
 
 #Resource  code for creating EBS volume
 resource "aws_ebs_volume" "tokyo_ebs_volume" {
@@ -34,4 +35,10 @@ resource "aws_ebs_default_kms_key" "tokyo_ebs_kms" {
   tags = {
     Name = "Tokyo_snapshot"
   }
+}
+
+resource "aws_volume_attachment" "tokyo_ebs_att" {
+  device_name = "/dev/sdh"
+  volume_id   = aws_ebs_volume.tokyo_ebs_volume.id
+  instance_id = aws_instance.web.id
 }
