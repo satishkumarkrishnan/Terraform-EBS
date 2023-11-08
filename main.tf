@@ -25,6 +25,7 @@ resource "aws_ebs_volume" "tokyo_ebs_volume" {
 
 resource "aws_ebs_default_kms_key" "tokyo_ebs_kms" {
   key_arn = module.cloudwatch.kms_arn      
+  depends_on = [module.cloudwatch]
   }
 
   resource "aws_ebs_snapshot" "tokyo_ebs_snapshot" {
