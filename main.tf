@@ -43,4 +43,5 @@ resource "aws_volume_attachment" "tokyo_ebs_att" {
   device_name = "/dev/sdh"
   volume_id   = aws_ebs_volume.tokyo_ebs_volume.id
   instance_id = module.asg.instance_id
+  depends_on = [module.asg]
 }
