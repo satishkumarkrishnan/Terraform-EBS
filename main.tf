@@ -25,8 +25,8 @@ resource "aws_ebs_volume" "tokyo_ebs_volume" {
 }
 
 resource "aws_ebs_default_kms_key" "tokyo_ebs_kms" {
-  key_arn = module.cloudwatch.kms_arn      
-  depends_on = [module.cloudwatch]
+  key_arn = module.ebs.kms_arn      
+  depends_on = [module.ebs]
   }
 
   resource "aws_ebs_snapshot" "tokyo_ebs_snapshot" {
@@ -40,5 +40,16 @@ resource "aws_ebs_default_kms_key" "tokyo_ebs_kms" {
 resource "aws_volume_attachment" "tokyo_ebs_att" {
   device_name = "/dev/sdh"
   volume_id   = aws_ebs_volume.tokyo_ebs_volume.id
-  instance_id = aws_instance.web.id
+  instance_id = module.ebs.instance_id
+}
+
+
+resource "aws_instance" "web" {
+  ami               = "ami-21f78e11"
+  availability_zone = "us-west-2a"
+  instance_type     = "t2.micro"
+
+  tags = {
+    Name = "HelloWorld"
+  }
 }
