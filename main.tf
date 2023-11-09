@@ -14,7 +14,7 @@ module "asg" {
 }
 
 module "kms" {
-  source="git@github.com:satishkumarkrishnan/terraform-aws-kms.git?ref=main"
+  source="git@github.com:satishkumarkrishnan/Terraform-KMS.git?ref=main"  
   depends_on = [module.asg]
 }
 
