@@ -9,8 +9,13 @@ terraform {
   }
 }
 
-module "ebs" {
+module "asg" {
   source="git@github.com:satishkumarkrishnan/terraform-aws-asg.git?ref=main"  
+}
+
+module "kms" {
+  source="git@github.com:satishkumarkrishnan/terraform-aws-kms.git?ref=main"
+  depends_on = [module.asg]
 }
 
 
@@ -25,8 +30,7 @@ resource "aws_ebs_volume" "tokyo_ebs_volume" {
 }
 
 resource "aws_ebs_default_kms_key" "tokyo_ebs_kms" {
-  key_arn = module.ebs.kms_arn      
-  depends_on = [module.ebs]
+  key_arn = module.kms.kms_arn   
   }
 
   resource "aws_ebs_snapshot" "tokyo_ebs_snapshot" {
@@ -40,16 +44,5 @@ resource "aws_ebs_default_kms_key" "tokyo_ebs_kms" {
 resource "aws_volume_attachment" "tokyo_ebs_att" {
   device_name = "/dev/sdh"
   volume_id   = aws_ebs_volume.tokyo_ebs_volume.id
-  instance_id = module.ebs.instance_id
-}
-
-
-resource "aws_instance" "web" {
-  ami               = "ami-21f78e11"
-  availability_zone = "us-west-2a"
-  instance_type     = "t2.micro"
-
-  tags = {
-    Name = "HelloWorld"
-  }
+  instance_id = module.asg.instance_id
 }
