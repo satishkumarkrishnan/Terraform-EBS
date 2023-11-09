@@ -17,7 +17,6 @@ module "kms" {
   source="git@github.com:satishkumarkrishnan/Terraform-KMS.git?ref=main"  
 }
 
-
 #Resource  code for creating EBS volume
 resource "aws_ebs_volume" "tokyo_ebs_volume" {
   availability_zone = "ap-northeast-1a"
